@@ -1,6 +1,7 @@
 package com.rapidtech.orderservice.controller;
 
 import com.rapidtech.orderservice.dto.OrderReq;
+import com.rapidtech.orderservice.dto.OrderResDto;
 import com.rapidtech.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,5 +18,16 @@ public class OrderController {
     public String placeOrder(@RequestBody OrderReq orderReq){
         orderService.placeOrder(orderReq);
         return "Produk berhasil ditambahkan ke keranjang.";
+    }
+
+    @GetMapping("/{id}")
+    public OrderResDto getByOrderId(@PathVariable("id") Long id){
+        return orderService.checkOut(id);
+    }
+
+
+    @PutMapping("/payment/{id}")
+    public OrderResDto updateStudent(@PathVariable("id") Long id){
+        return orderService.payment(id);
     }
 }

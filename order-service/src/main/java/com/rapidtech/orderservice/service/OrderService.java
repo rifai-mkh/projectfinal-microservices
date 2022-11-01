@@ -1,8 +1,6 @@
 package com.rapidtech.orderservice.service;
 
-import com.rapidtech.orderservice.dto.OrderLineItemsDto;
-import com.rapidtech.orderservice.dto.OrderReq;
-import com.rapidtech.orderservice.dto.ProductStockRes;
+import com.rapidtech.orderservice.dto.*;
 import com.rapidtech.orderservice.model.Order;
 import com.rapidtech.orderservice.model.OrderLineItems;
 import com.rapidtech.orderservice.repository.OrderRepo;
@@ -20,7 +18,7 @@ import java.util.UUID;
 public class OrderService {
     private final OrderRepo orderRepo;
     private final WebClient.Builder webClientBuilder;
-    public  void placeOrder(OrderReq orderReq){
+    public void placeOrder(OrderReq orderReq){
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
         List<OrderLineItems> orderLineItems = orderReq.getOrderLineItemsDtoList()
@@ -64,5 +62,24 @@ public class OrderService {
         orderLineItems.setQuantity(orderLineItemsDto.getQuantity());
         return orderLineItems;
     }
+
+    public OrderResDto checkOut(Long id){
+        Order order = orderRepo.findById(id).get();
+        return OrderResDto.builder()
+                .id(order.getId())
+                .orderNumber(order.getOrderNumber())
+                .build();
+    }
+
+    public OrderResDto payment(Long id){
+        Order orderOptional = orderRepo.findById(id).get();
+
+        OrderResDto orders = OrderResDto.builder()
+                    .id(orderOptional.getId())
+                    .orderNumber(orderOptional.getOrderNumber())
+                    .build();
+        return orders;
+    }
+
 
 }
