@@ -1,0 +1,38 @@
+package com.rapidtech.productservices.controller;
+
+import com.rapidtech.productservices.dto.ProductReq;
+import com.rapidtech.productservices.dto.ProductRes;
+import com.rapidtech.productservices.dto.ProductStockRes;
+import com.rapidtech.productservices.service.ProductService;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/product")
+@RequiredArgsConstructor
+public class ProductControllers {
+    private final ProductService productService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProduct(@RequestBody ProductReq productReq){
+        productService.createProduct(productReq);
+    }
+
+    @GetMapping("/allproducts")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductRes> getAllProducts(){
+
+        return productService.getAllProducts();
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductStockRes> isInStock(@RequestParam List<String> productCode){
+        return productService.isInStock(productCode);
+    }
+}

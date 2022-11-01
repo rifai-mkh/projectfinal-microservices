@@ -1,0 +1,5 @@
+# Project exclude paths
+/discovery-server/target/
+/order-service/target/
+/product-services/target/
+/wallet-service/target/
