@@ -12,5 +12,5 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class WalletReq {
     private String userName;
-    private BigDecimal currentBalance;
+    private double currentBalance;
 }

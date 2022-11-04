@@ -3,8 +3,10 @@ package com.rapidtech.orderservice.service;
 import com.rapidtech.orderservice.dto.*;
 import com.rapidtech.orderservice.model.Order;
 import com.rapidtech.orderservice.model.OrderLineItems;
+import com.rapidtech.orderservice.repository.OrderLineItemsRepo;
 import com.rapidtech.orderservice.repository.OrderRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -15,8 +17,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
     private final OrderRepo orderRepo;
+    private final OrderLineItemsRepo orderLineItemsRepo;
     private final WebClient.Builder webClientBuilder;
     public void placeOrder(OrderReq orderReq){
         Order order = new Order();
@@ -46,17 +50,31 @@ public class OrderService {
                 Arrays.stream(productResponsesArr).allMatch(ProductStockRes::isInStock);
 
         if(allProductsInStock){
-            orderRepo.save(order);
+            List<String> userNames = order.getOrderLineItemsList().stream()
+                    .map(OrderLineItems::getUserName).toList();
+            //cek ballance di wallet
+            WalletBalanceRes[] walletBalanceResArr = webClientBuilder.build().get().uri("http://wallet-service/api/wallet",
+                            uriBuilder -> uriBuilder.queryParam("userName", userNames)
+                                    .build())
+                    .retrieve()
+                    .bodyToMono(WalletBalanceRes[].class)
+                    .block();
+            boolean saldoAvailable = Arrays.stream(walletBalanceResArr).allMatch(WalletBalanceRes::isSaldoAvail);
+            if(saldoAvailable){
+                orderRepo.save(order);
+            }else {
+                throw new IllegalArgumentException("Saldo Anda tidak cukup....");
+            }
+
         }else {
             throw new IllegalArgumentException("Stok Product tidak mencukupi....");
         }
-
-        //cek saldo di wallet-service
 
     }
 
     private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto){
         OrderLineItems orderLineItems = new OrderLineItems();
+        orderLineItems.setUserName(orderLineItemsDto.getUserName());
         orderLineItems.setProductCode(orderLineItemsDto.getProductCode());
         orderLineItems.setPrice(orderLineItemsDto.getPrice());
         orderLineItems.setQuantity(orderLineItemsDto.getQuantity());
@@ -71,14 +89,15 @@ public class OrderService {
                 .build();
     }
 
-    public OrderResDto payment(Long id){
-        Order orderOptional = orderRepo.findById(id).get();
 
-        OrderResDto orders = OrderResDto.builder()
-                    .id(orderOptional.getId())
-                    .orderNumber(orderOptional.getOrderNumber())
-                    .build();
-        return orders;
+
+    public OrderResDto payment(Long id){
+        Order order = orderRepo.findById(id).get();
+        return OrderResDto.builder()
+                .id(order.getId())
+                .orderNumber(order.getOrderNumber())
+                .build();
+
     }
 
 

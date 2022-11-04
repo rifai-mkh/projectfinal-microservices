@@ -1,5 +1,6 @@
 package com.rapidtech.orderservice.controller;
 
+import com.rapidtech.orderservice.dto.OrderDto;
 import com.rapidtech.orderservice.dto.OrderReq;
 import com.rapidtech.orderservice.dto.OrderResDto;
 import com.rapidtech.orderservice.service.OrderService;
@@ -17,7 +18,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public String placeOrder(@RequestBody OrderReq orderReq){
         orderService.placeOrder(orderReq);
-        return "Produk berhasil ditambahkan ke keranjang.";
+        return "Produk berhasil dibeli.";
     }
 
     @GetMapping("/{id}")
@@ -26,7 +27,7 @@ public class OrderController {
     }
 
 
-    @PutMapping("/payment/{id}")
+    @GetMapping("/payment/{id}")
     public OrderResDto updateStudent(@PathVariable("id") Long id){
         return orderService.payment(id);
     }

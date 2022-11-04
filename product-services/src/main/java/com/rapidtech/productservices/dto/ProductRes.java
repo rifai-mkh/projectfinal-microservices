@@ -15,5 +15,5 @@ public class ProductRes {
     private String id;
     private String productCode;
     private BigDecimal price;
-    private Integer quantity;
+    private Double quantity;
 }

@@ -1,18 +1,15 @@
-package com.rapidtech.walletservice.dto;
+package com.rapidtech.orderservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WalletRes {
-    private Long id;
+@Builder
+public class WalletBalanceRes {
     private String userName;
-    private double currentBalance;
+    private boolean isSaldoAvail;
 }

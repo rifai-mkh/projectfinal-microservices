@@ -3,6 +3,7 @@ package com.rapidtech.productservices.controller;
 import com.rapidtech.productservices.dto.ProductReq;
 import com.rapidtech.productservices.dto.ProductRes;
 import com.rapidtech.productservices.dto.ProductStockRes;
+import com.rapidtech.productservices.model.Product;
 import com.rapidtech.productservices.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,22 @@ public class ProductControllers {
         productService.createProduct(productReq);
     }
 
+    @PutMapping("/addStock/{id}/addQuantity/{addQuantity}")
+    public String addStock(@PathVariable("id") Long id, @PathVariable("addQuantity") Double addQuantity) {
+        Product product = getById(id);
+        return productService.addStock(product, addQuantity);
+    }
+
     @GetMapping("/allproducts")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductRes> getAllProducts(){
 
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/getbyId/{id}")
+    public Product getById(@PathVariable("id") Long id) {
+        return productService.getById(id);
     }
 
     @GetMapping

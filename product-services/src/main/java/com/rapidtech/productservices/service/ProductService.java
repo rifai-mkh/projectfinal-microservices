@@ -28,6 +28,13 @@ public class ProductService {
         log.info("Product {} is saved",product.getId());
     }
 
+    public String addStock(Product product, Double addQuantity) {
+        Double updatedStock = product.getQuantity() + addQuantity;
+        product.setQuantity(updatedStock);
+        productRepo.save(product);
+        return "Stock Product Code : " + product.getProductCode() + " berhasil ditambahkan stok sebesar " + addQuantity;
+    }
+
     public List<ProductRes> getAllProducts(){
         List<ProductRes> productResList = new ArrayList<>();
         List<Product> productList = productRepo.findAll();
@@ -41,6 +48,16 @@ public class ProductService {
         return productResList;
 
         //return products.stream().map(this::mapToProductRes).toList();
+    }
+
+    public Product getById(Long id) {
+        Product products = new Product();
+        Product product = productRepo.findById(id).orElse(new Product());
+        products.setId(product.getId());
+        products.setProductCode(product.getProductCode());
+        products.setPrice(product.getPrice());
+        products.setQuantity(product.getQuantity());
+        return  products;
     }
 
 

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
+
 @Entity
 @Table(name="wallet")
 @AllArgsConstructor
@@ -18,5 +18,5 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String userName;
-    private BigDecimal currentBalance;
+    private double currentBalance;
 }
