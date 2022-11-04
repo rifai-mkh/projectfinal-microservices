@@ -11,14 +11,20 @@
         <module name="api-gateway" />
         <module name="order-service" />
         <module name="discovery-server" />
+        <module name="notification-services" />
         <module name="wallet-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="notification-service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
+      <module name="notification-services" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="product-services" options="-parameters" />
       <module name="wallet-service" options="-parameters" />
