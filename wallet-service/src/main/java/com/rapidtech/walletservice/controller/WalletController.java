@@ -47,7 +47,7 @@ public class WalletController {
     }
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<WalletBalanceRes> isSaldoAvail(@RequestParam String userName) {
+    public List<WalletBalanceRes> isSaldoAvail(@RequestParam List<String> userName) {
         return walletService.isSaldoAvail(userName);
     }
 }

@@ -6,16 +6,18 @@ import com.rapidtech.walletservice.dto.WalletRes;
 import com.rapidtech.walletservice.model.Wallet;
 import com.rapidtech.walletservice.repository.WalletRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class WalletService {
-    private final WalletRepo walletRepo;
+    @Autowired
+    private WalletRepo walletRepo;
 
     public void createWallet(WalletReq walletReq){
         Wallet wallet = Wallet.builder()
@@ -61,9 +63,12 @@ public class WalletService {
         walletRepo.save(wallet);
         return "UserName : " + wallet.getUserName() + " berhasil top up sebesar " + jumlah;
     }
-
-    public List<WalletBalanceRes> isSaldoAvail(String userName){
-        return walletRepo.findByuserName(userName).stream()
+    @SneakyThrows
+    public List<WalletBalanceRes> isSaldoAvail(List<String> userName){
+        //log.info("Mulai menunggu");
+        //Thread.sleep(10000);
+        log.info("Selesai menunggu");
+        return walletRepo.findByuserNameIn(userName).stream()
                 .map(wallet ->
                         WalletBalanceRes.builder()
                                 .userName(wallet.getUserName())

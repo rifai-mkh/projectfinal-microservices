@@ -6,6 +6,7 @@ import com.rapidtech.productservices.dto.ProductStockRes;
 import com.rapidtech.productservices.model.Product;
 import com.rapidtech.productservices.repository.ProductRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -71,8 +72,11 @@ public class ProductService {
 
      */
 
-
+    @SneakyThrows
     public List<ProductStockRes> isInStock(List<String> productCode){
+        //log.info("Mulai menunggu");
+        //Thread.sleep(10000);
+        log.info("Selesai menunggu");
         return productRepo.findByProductCodeIn(productCode).stream()
                 .map(r ->
                         ProductStockRes.builder()

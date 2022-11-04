@@ -21,14 +21,15 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @CircuitBreaker(name = "inventory")
-    public String placeOrder(@RequestBody OrderReq orderReq){
-        orderService.placeOrder(orderReq);
-        return "Produk berhasil dibeli.";
+    @CircuitBreaker(name = "inventory"/*,fallbackMethod = "fallbackMethod"*/)
+    @TimeLimiter(name = "inventory")
+    @Retry(name = "inventory")
+    public CompletableFuture<String> placeOrder(@RequestBody OrderReq orderReq){
+        return CompletableFuture.supplyAsync(()->orderService.placeOrder(orderReq));
     }
 
-    public String fallbackMethod(OrderReq orderReq){
-        return "Terjadi kesalahan, silahkan untuk order kembali beberapa saat lagi...";
+    public CompletableFuture<String> fallbackMethod(OrderReq orderReq, RuntimeException runtimeException){
+        return CompletableFuture.supplyAsync(()->"Terjadi kesalahan, silahkan untuk order kembali beberapa saat lagi...");
     }
 
     @GetMapping("/{id}")

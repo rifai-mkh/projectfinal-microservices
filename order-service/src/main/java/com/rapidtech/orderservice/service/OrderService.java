@@ -25,7 +25,7 @@ public class OrderService {
     private final WebClient.Builder webClientBuilder;
 
     private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
-    public void placeOrder(OrderReq orderReq){
+    public String placeOrder(OrderReq orderReq){
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
         List<OrderLineItems> orderLineItems = orderReq.getOrderLineItemsDtoList()
@@ -68,6 +68,7 @@ public class OrderService {
             if(saldoAvailable){
                 orderRepo.save(order);
                 kafkaTemplate.send("notificationTopic",new OrderPlacedEvent(order.getOrderNumber()));
+                return "Order berhasil dilakukan";
             }else {
                 throw new IllegalArgumentException("Saldo Anda tidak cukup....");
             }

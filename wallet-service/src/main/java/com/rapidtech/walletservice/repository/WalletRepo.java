@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface WalletRepo extends JpaRepository<Wallet,Long> {
-    List<Wallet> findByuserName(String userName);
+    List<Wallet> findByuserNameIn(List<String> userName);
 
     Wallet findByUserName(String userName);
 }
